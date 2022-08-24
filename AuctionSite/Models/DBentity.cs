@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AuctionSite.Models
 {
@@ -8,7 +9,7 @@ namespace AuctionSite.Models
     public class DBentity
     {
         [Key]
-        //[DatabaseGenerated(DatabaseGeneratedOption.Identity)] Will be added when Entity is added
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)] //Letting the DB set the Id
         public Guid Id { get; set; }
         public DateTime DateOfCreation { get; set; } = DateTime.Now;
 

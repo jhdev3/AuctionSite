@@ -1,7 +1,14 @@
+using AuctionSite.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+//Adding Connection string to my ApplicationDbContext and also configure Entity to work.
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(
+    builder.Configuration.GetConnectionString("LocalDbConnection")
+    ));
 
 var app = builder.Build();
 

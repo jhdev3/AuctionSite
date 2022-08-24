@@ -1,3 +1,7 @@
+
+/// <summary>
+/// Error model scaffoleded and standard for MVC.
+/// </summary>
 namespace AuctionSite.Models
 {
     public class ErrorViewModel

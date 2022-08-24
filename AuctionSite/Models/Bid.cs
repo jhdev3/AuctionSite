@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AuctionSite.Models
 {
@@ -7,6 +8,8 @@ namespace AuctionSite.Models
         [Required(ErrorMessage = "Empty bid is no bid ;)!!")]
         public decimal BidPrice { get; set; }//Decimal beacuse its money :)    
 
-        public Guid BidderId { get; set; }
+        [ForeignKey("AuctionItem")]//Used to create a relationship with AuctionItem to faster db queries :)
+        public Guid AuctionItemId { get; set; }
+      //  public Guid BidderId { get; set; } This will be added when I Identity 
     }
 }

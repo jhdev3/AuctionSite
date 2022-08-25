@@ -4,7 +4,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - AuctionSite</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" /> <!--Atm Bootstrap 5.1. -->
+    <link href="~/css/bootstrap.custom.css" rel="stylesheet" /> <!--Atm Bootstrap 5.2. -->
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css"> <!--Bootstrap Icons-->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 
@@ -21,13 +22,13 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-primary" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-primary" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                         <li class="nav-item">
-                        <a class="dropdown-item" asp-area="Admin" asp-controller="ManagerCategory" asp-action="Index">Category Manager</a>
+                        <a class="nav-link text-primary" asp-area="Admin" asp-controller="ManagerCategory" asp-action="Index">Category Manager</a>
                         </li>
                     </ul>
                 </div>
@@ -46,7 +47,8 @@
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script> <!--Bootstrap and JQuery + Site.js.-->
+@* maybe need this if some js dont work :)       <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script> <!--Bootstrap and JQuery + Site.js.-->
+*@
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

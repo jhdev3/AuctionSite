@@ -1,0 +1,8 @@
+﻿[
+  {
+    "outputFile": "wwwroot/css/bootstrap.custom.css",
+    "inputFile": "wwwroot/css/bootstrap.custom.scss"
+  }
+]
+
+//From Web Compiler usin scss

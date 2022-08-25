@@ -1,0 +1,18 @@
+﻿// First override some or all individual color variables
+$primary: #e6d87f;
+$secondary: #8f5325;
+$success: #3e8d63;
+$info: #05eedb;
+$warning: #945707;
+$danger: #d62518;
+$light: #f8f9fa;
+$dark: #343a40;
+
+$bg-color: #363636; //Some grey
+
+$gold: hsl(76, 95%, 75%);
+@import "../lib/bootstrap/scss/bootstrap";
+
+nav.navbar {
+    background: linear-gradient($dark, $yellow);
+}

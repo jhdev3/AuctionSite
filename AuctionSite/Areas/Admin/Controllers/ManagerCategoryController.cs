@@ -1,23 +1,28 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AuctionSite.Data;
+using AuctionSite.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace AuctionSite.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class ManagerCategoryController : Controller
     {
-        //private readonly DBContext _DBContext;
+        private readonly ApplicationDbContext _db;
 
 
-        //public ManagerCategoryController(IUnitOfWork context)
-        //{
-        //    _UnitOfWork = context;
-        //}
+        public ManagerCategoryController(ApplicationDbContext dbcontext)
+        {
+            _db = dbcontext;
+        }
 
 
         // GET: A list of all Categories and a way to mange them     
         public async Task<IActionResult> Index()
         {
-            return View();
+            IEnumerable<Category> categories = await _db.Categories.ToListAsync();
+            return View(categories);
         }
 
         // GET: ManagerCategoryController/Details/5

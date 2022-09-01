@@ -8,11 +8,28 @@ $danger: #d62518;
 $light: #f8f9fa;
 $dark: #343a40;
 
-$bg-color: #363636; //Some grey
+/* make changes to the !default Bootstrap variables */
+$body-color: #f8f9fa; //this is the text color
+$body-bg: #363636; //this is the background color
+$input-focus-border-color: #c26d1e;
+
+
+
+// My custom mixin for button-variant override file
+// I only include the part i want to customize
+// In this case, i want to customize background-color
+
+
+// Typography
+//$font-size-base: 12px; // this changes the font-size throughout bootstrap
+//$font-family-sans-serif: "Raleway", sans-serif;
+//$font-size-base: 1rem;
+//$line-height-base: 1.2;
 
 $gold: hsl(76, 95%, 75%);
 @import "../lib/bootstrap/scss/bootstrap";
 
+//Custom css for Testing
 nav.navbar {
-    background: linear-gradient($dark, $yellow);
+  background: linear-gradient($dark, $yellow);
 }

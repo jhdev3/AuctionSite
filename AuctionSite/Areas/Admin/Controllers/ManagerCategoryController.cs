@@ -25,31 +25,38 @@ namespace AuctionSite.Areas.Admin.Controllers
             return View(categories);
         }
 
-        // GET: ManagerCategoryController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
         // GET: ManagerCategoryController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: ManagerCategoryController/Create
-        [HttpPost]
+        [HttpPost, ActionName("Create")]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> CreatePartial(Category category)
         {
-            try
+            if (ModelState.IsValid)
             {
+                //If Name already exist.
+                var test = await _db.Categories.Where(c => c.CategoryName == category.CategoryName).FirstOrDefaultAsync();
+                if (test != null) //If it exists
+                {
+                    ModelState.AddModelError("", $"Kategorin: {category.CategoryName} finns redan");
+                    TempData["Error"] = $"Kategorin: {category.CategoryName} finns redan";
+                    //return Json(new
+                    //{
+                    //    status = "failure",
+                    //    formErrors = ModelState.Select(kvp => new { key = kvp.Key, errors = kvp.Value.Errors.Select(e => e.ErrorMessage) })
+                    //});
+                    return View("_CreatePartial", category);
+
+                }
+                _db.Categories.Add(category);
+                await _db.SaveChangesAsync();
+                TempData["Success"] = $"Lyckades skapa : {category.CategoryName} :)";
                 return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View();
-            }
+            return View("_CreatePartial", category);
         }
 
         // GET: ManagerCategoryController/Edit/5

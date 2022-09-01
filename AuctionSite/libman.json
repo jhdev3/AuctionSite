@@ -96,6 +96,10 @@
         "scss/utilities/_api.scss",
         "scss/vendor/_rfs.scss"
       ]
+    },
+    {
+      "library": "jquery-ajax-unobtrusive@3.2.6",
+      "destination": "wwwroot/lib/jquery-ajax-unobtrusive/"
     }
   ]
 }

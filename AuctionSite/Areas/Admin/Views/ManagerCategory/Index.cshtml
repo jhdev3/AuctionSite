@@ -66,7 +66,6 @@
                     </button>
                 </div>
                 <div class="modal-body" id="divCategory">
-                        <div asp-validation-summary="All" class="text-danger"></div>  
                         <partial name="_CreatePartial" model="new Category()" />
                 </div>
                 <div class="modal-footer">
@@ -77,25 +76,32 @@
         </div>
     </div>
 </form>
-@section Scripts {
+@section Scripts {<!--Validation scripts will trigger so in some cases there wont be need for any asking the server :)-->
        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
 }
-@*@section Scripts{
-  <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
-    <script type="text/javascript">
-        function OnComplete() {
-            $("#exampleModal").modal("hide");
-        }
-    </script>
-}*@
-   
+
+
 
 
  <script>
-        OnSuccess = function () {
+
+     function OnSuccess(data) {
+         console.log(data);
+         if (!data.success) {           
+             const errorlist = document.getElementById("divCategory").querySelector('ul');
+             errorlist.innerHTML = ""; //Clearing error list first
+             for (var i = 0, l = data.modelError.length; i < l; i++) {
+                 var obj = data.modelError[i];
+                 var entry = document.createElement('li'); //Add list message
+                 entry.appendChild(document.createTextNode(obj.errorMessage));
+                 errorlist.appendChild(entry);
+             }          
+         }
+         else {
              $("#exampleModal").modal("hide");
-             window.location.reload(); //Page to refresh the page and update page true :)
+                window.location.reload(); //Page to refresh the page and update page true :)
+         }
+            
         };
     </script>

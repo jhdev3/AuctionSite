@@ -5490,7 +5490,7 @@ textarea.form-control-lg {
 
 .modal-backdrop {
   --bs-backdrop-zindex: 1050;
-  --bs-backdrop-bg: #000;
+  --bs-backdrop-bg: rgba(248, 249, 250, 0.22);
   --bs-backdrop-opacity: 0.5;
   position: fixed;
   top: 0;
@@ -6738,7 +6738,7 @@ textarea.form-control-lg {
   z-index: 1040;
   width: 100vw;
   height: 100vh;
-  background-color: #000;
+  background-color: rgba(248, 249, 250, 0.22);
 }
 .offcanvas-backdrop.fade {
   opacity: 0;

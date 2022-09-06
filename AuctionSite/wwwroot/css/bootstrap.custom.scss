@@ -8,16 +8,21 @@ $danger: #d62518;
 $light: #f8f9fa;
 $dark: #343a40;
 
+// My custom mixin for button-variant override file
+// I only include the part i want to customize
+// In this case, i want to customize background-color
+
 /* make changes to the !default Bootstrap variables */
 $body-color: #f8f9fa; //this is the text color
 $body-bg: #363636; //this is the background color
 $input-focus-border-color: #c26d1e;
 
 
+$modal-backdrop-bg: rgb($light, 0.22); //Change the backdrop so we notice its a popup :)
 
-// My custom mixin for button-variant override file
-// I only include the part i want to customize
-// In this case, i want to customize background-color
+
+
+
 
 
 // Typography

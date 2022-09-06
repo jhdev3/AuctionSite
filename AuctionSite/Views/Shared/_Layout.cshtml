@@ -6,6 +6,7 @@
     <title>@ViewData["Title"] - AuctionSite</title>
     <link href="~/css/bootstrap.custom.css" rel="stylesheet" /> <!--Atm Bootstrap 5.2. -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css"> <!--Bootstrap Icons-->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 
 </head>
@@ -27,13 +28,16 @@
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                         <li class="nav-item">
-                        <a class="nav-link" asp-area="Admin" asp-controller="ManagerCategory" asp-action="Index">Category Manager</a>
+                            <a class="nav-link" asp-area="Admin" asp-controller="ManagerCategory" asp-action="Index">Category Manager</a>
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script><!--Toaster JS-->
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -45,13 +49,14 @@
             &copy; 2022 - AuctionSite - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
-        <script src="~/lib/jquery/dist/jquery.min.js"></script> 
 
 
     @await RenderSectionAsync("Scripts", required: false)
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js" integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK" crossorigin="anonymous"></script>
-<script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js" integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK" crossorigin="anonymous"></script>
+
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
 
 
 </body>

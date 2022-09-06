@@ -25,43 +25,6 @@ namespace AuctionSite.Areas.Admin.Controllers
             return View(categories);
         }
 
-        // GET: ManagerCategoryController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-
-        ////Make This An API Create End Points for the Failure for the stuff :) Asp-Validation all works :). 
-        //[HttpPost, ActionName("Create")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> CreatePartial(Category category)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        //If Name already exist.
-        //        var test = await _db.Categories.Where(c => c.CategoryName == category.CategoryName).FirstOrDefaultAsync();
-        //        if (test != null) //If it exists
-        //        {
-        //            ModelState.AddModelError("", $"Kategorin: {category.CategoryName} finns redan");
-        //            TempData["Error"] = $"Kategorin: {category.CategoryName} finns redan";
-        //            //return Json(new
-        //            //{
-        //            //    status = "failure",
-        //            //    formErrors = ModelState.Select(kvp => new { key = kvp.Key, errors = kvp.Value.Errors.Select(e => e.ErrorMessage) })
-        //            //});
-        //           return BadRequest(ModelState);
-
-        //        }
-        //        _db.Categories.Add(category);
-        //        await _db.SaveChangesAsync();
-        //        TempData["Success"] = $"Lyckades skapa : {category.CategoryName} :)";
-        //        return RedirectToAction(nameof(Index));
-        //    }
-
-        //    return View("_CreatePartial", category);
-        //}
-
         // GET: ManagerCategoryController/Edit/5
         public ActionResult Edit(int id)
         {
@@ -105,11 +68,6 @@ namespace AuctionSite.Areas.Admin.Controllers
         }
 
 
-
-
-
-
-
         #region API CALLS
         /// <summary>
         /// Post function of creat a Category and save it to database,
@@ -144,6 +102,27 @@ namespace AuctionSite.Areas.Admin.Controllers
                 success = false,
                 ModelError = ModelState.Values.SelectMany(x => x.Errors)
             });
+        }
+        /// <summary>
+        /// Delete a category and uses TempData to view message if it got deleted or not
+        /// </summary>
+        /// <param name="Id"> Category Id</param>
+        /// <returns> Ok() = Server recived the request</returns>
+        [HttpDelete]
+        public async Task<IActionResult> DeleteCategory(Guid?  Id)
+        {                    
+                //Check if the category exists in database
+                var test = await _db.Categories.FindAsync(Id);
+            if (test == null) //If it not exists
+            {
+                TempData["Error"] = $"Error while trying to delete: {test.CategoryName}";
+                return Ok();
+            }
+
+            _db.Categories.Remove(test);
+            await _db.SaveChangesAsync();
+            TempData["Success"] = $"Lyckades Ta bort : {test.CategoryName} : Deleted Successfully:)";
+            return Ok();       
         }
     }
 

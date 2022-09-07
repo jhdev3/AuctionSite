@@ -22,6 +22,7 @@
     </div>
 </div>
 <hr />
+
 <table class="table table-striped-columns">
     <thead>
         <tr>
@@ -39,14 +40,26 @@
         {
             <tr>
                 <td>
-                    @item.CategoryName
+                    <div class="index row">
+                        <div class="col-10">
+                            @item.CategoryName
+                        </div>
+                        <div class="col align-self-center d-flex justify-content-end">
+                            <button onclick="Edit(this, '@item.Id')"
+                                    class="btn btn-outline-primary rounded-circle p-1"
+                                    title="Edit">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="edit">
+
+                    </div>
                 </td>
                 <td>
                     @item.DateOfCreation
                 </td>
                 <td>
-                    <a asp-controller="ManagerCategory" asp-action="Edit" asp-route-id="@item.Id"
-                       class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i> Edit</a>
                     <a onclick="Delete('/Admin/ManagerCategory/DeleteCategory/{@item.Id}')"
                        class="btn btn-danger mx-2"> <i class="bi bi-trash-fill"></i> Delete</a>
                 </td>
@@ -56,7 +69,7 @@
 </table>
 
 
-<!-- Modal -->
+<!-- Modal form using beginForm for validation and contact with api good for using modalstate for validation -->
 <form asp-action="Create" asp-controller="ManagerCategory" method="POST" data-ajax="true" data-ajax-update="divCategory" data-ajax-success="OnSuccess">
     <div id="AddCategoryModal" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static">
         <div class="modal-dialog" role="document">
@@ -89,7 +102,6 @@
 <script>
     //Using OnSuccess beacuse of beginform and gettting a message from server i could use on succes or on completed, basicly the same so used onsuccess.
     function OnSuccess(data) {
-        console.log(data);
         if (!data.success) {
             const errorlist = document.getElementById("divCategory").querySelector('ul');
             errorlist.innerHTML = ""; //Clearing error list first
@@ -106,7 +118,7 @@
         }
     }
     //Function delete using Ajax just beacuse i wanted to try Type Delete then i reload page beacuse if there would be an error it mostlikley is beacuse it got the deleted by someone else before you refreshed the page.
-    //This function could be skiped and use httpPost or get then redirect to index page by controller instead of window reload. 
+    //This function could be skiped and use httpPost or get then redirect to index page by controller instead of window reload.
     function Delete(url) {
         $.ajax({
             url: url,
@@ -116,5 +128,18 @@
             }
         });
 
+    }
+
+    function Edit(node, Id) {
+        console.log($(node).closest('.row'));
+        $.ajax({
+            type: 'GET',
+            url: '/Admin/ManagerCategory/Edit/',
+            data: 'Id=' + Id,
+            success: function (data) {
+                $(node).closest('.row').hide(); 
+                $(node).closest('td').find('.edit').html(data);
+            }
+        });
     }
 </script>

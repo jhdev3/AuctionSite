@@ -26,47 +26,19 @@ namespace AuctionSite.Areas.Admin.Controllers
         }
 
         // GET: ManagerCategoryController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
+        public async Task<IActionResult> Edit(Guid Id)
+        {       
+            var category = await _db.Categories.FindAsync(Id);
+            if (category == null)
+            {
+                return NotFound(Id);
+            }
+
+            return PartialView(category);
         }
 
         // POST: ManagerCategoryController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: ManagerCategoryController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: ManagerCategoryController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
+   
 
         #region API CALLS
         /// <summary>
@@ -124,8 +96,51 @@ namespace AuctionSite.Areas.Admin.Controllers
             TempData["Success"] = $"Lyckades Ta bort : {test.CategoryName} : Deleted Successfully:)";
             return Ok();       
         }
-    }
 
-    #endregion
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Edit(Category category)
+        {
+            if (ModelState.IsValid)
+            {
+                //Check if Category name already Exist so not Edit will create 2 of the same name :)
+                var test = await _db.Categories.Where(c => c.CategoryName == category.CategoryName).FirstOrDefaultAsync();
+                if (test != null) //If it exists
+                {
+                    ModelState.AddModelError("", $"The Category: {category.CategoryName} already exists");
+                    return Json(new
+                    {
+                        success = false,
+                        Id = category.Id,
+                        ModelError = ModelState.Values.SelectMany(x => x.Errors)
+                    });
+                }
+                _db.Categories.Update(category);
+                //Concurrency exeptions -Can be applied here if for example someone deletes the Category you are tring to Edit. 
+                try
+                {
+                    await _db.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException ex)
+                {
+                    //want to reaload page so incase u want to try again or the category already been update it will show. Here is good to logg ex.Message for futher investigation and bugg checks if this would be a real app ;)
+                    TempData["Error"] = $"Failed to update : {category.CategoryName}"; //ex.Message for whole error message or Implement an logger and store it there :)
+                    return Json(new { Success = true }); //True so i can reaload the window ;) and show the Failure message passed throw to TempData
+                }
+                TempData["Success"] = $"Edit Success :)";
+
+                return Json(new { Success = true });
+            }
+            return Json(new
+            {
+                success = false,
+                Id = category.Id,
+                ModelError = ModelState.Values.SelectMany(x => x.Errors)
+            });
+        }
+        #endregion
+
+    }
 }
 

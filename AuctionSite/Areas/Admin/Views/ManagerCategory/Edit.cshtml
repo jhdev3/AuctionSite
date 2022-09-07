@@ -1,0 +1,63 @@
+﻿@model AuctionSite.Models.Category
+
+@Html.AntiForgeryToken()
+
+
+<div class="row">
+    <form asp-action="Edit" asp-controller="ManagerCategory" method="POST" data-ajax="true" data-ajax-success="EditSuccess">
+
+        <div class="col-8">
+            <!--Using ajax BeginForm to validate the Form.-->
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="DateOfCreation" />
+            <div asp-validation-summary="All" class="text-danger" id="@Model.Id"></div> <!--This asp validation creates a ul list for errors were i display Error message in-->
+        </div>
+        <div class="row gs-md-1">
+            <div class="form-floating mb-3 col-12 col-md-7">
+                <input asp-for="CategoryName" class="form-control" />
+                <label asp-for="CategoryName" class="control-label"></label>
+                <span asp-validation-for="CategoryName" class="text-danger"></span>
+            </div>
+            <div class="col-2 mb-3 align-self-center">
+                <button type="submit" class="btn btn-primary" ><i class="fas fa-save"></i> Save </button>
+            </div>
+
+            <div class="col mb-3 align-self-center d-flex justify-content-end">
+                <button type="button"
+                        onclick="ToggleEdit(this)"
+                        class="btn btn-primary rounded-circle p-1"
+                        title="Edit">
+                    <i class="bi bi-pencil"></i>
+                </button>
+            </div>
+        </div>
+</form>
+</div>
+
+@section Scripts {<!--Validation scripts will trigger so in some cases there wont be need for any asking the server :)-->
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+}
+<script>
+ 
+    function EditSuccess(data) {
+        if (!data.success) {
+            const errorlist = document.getElementById(data.id).querySelector('ul');
+            errorlist.innerHTML = ""; //Clearing error list first
+            for (var i = 0, l = data.modelError.length; i < l; i++) {
+                var obj = data.modelError[i];
+                var entry = document.createElement('li'); //Add list message
+                entry.appendChild(document.createTextNode(obj.errorMessage));
+                errorlist.appendChild(entry);
+            }
+        }
+        else {
+            window.location.reload(); //realodes the pages beacuse its easiest to call index again and update the table :)
+        }
+    }
+
+    function ToggleEdit(node) {  
+        $(node).closest('td').find('.index').show();
+        $(node).closest('td').find('.edit').html('');
+    }
+</script>

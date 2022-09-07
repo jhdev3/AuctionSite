@@ -1,0 +1,40 @@
+﻿// First override some or all individual color variables
+$primary: #e6d87f;
+$secondary: #8f5325;
+$success: #3e8d63;
+$info: #05eedb;
+$warning: #945707;
+$danger: #d62518;
+$light: #f8f9fa;
+$dark: #343a40;
+
+// My custom mixin for button-variant override file
+// I only include the part i want to customize
+// In this case, i want to customize background-color
+
+/* make changes to the !default Bootstrap variables */
+$body-color: #f8f9fa; //this is the text color
+$body-bg: #363636; //this is the background color
+$input-focus-border-color: #c26d1e;
+
+
+$modal-backdrop-bg: rgb($light, 0.22); //Change the backdrop so we notice its a popup :)
+
+
+
+
+
+
+// Typography
+//$font-size-base: 12px; // this changes the font-size throughout bootstrap
+//$font-family-sans-serif: "Raleway", sans-serif;
+//$font-size-base: 1rem;
+//$line-height-base: 1.2;
+
+$gold: hsl(76, 95%, 75%);
+@import "../lib/bootstrap/scss/bootstrap";
+
+//Custom css for Testing
+nav.navbar {
+  background: linear-gradient($dark, $yellow);
+}

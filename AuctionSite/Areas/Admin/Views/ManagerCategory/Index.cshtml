@@ -1,0 +1,145 @@
+﻿@model IEnumerable<AuctionSite.Models.Category>
+
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-6">
+            <h3 class="text-primary">Category List</h3>
+        </div>
+        <div class="col-6 text-end">
+            <!--Button Trigger Modal-->
+            <a asp-action="Create" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddCategoryModal">
+                <i class="bi bi-plus-square"></i>
+                Add Category
+            </a>
+        </div>
+    </div>
+</div>
+<hr />
+
+<table class="table table-striped-columns">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CategoryName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateOfCreation)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <div class="index row">
+                        <div class="col-10">
+                            @item.CategoryName
+                        </div>
+                        <div class="col align-self-center d-flex justify-content-end">
+                            <button onclick="Edit(this, '@item.Id')"
+                                    class="btn btn-outline-primary rounded-circle p-1"
+                                    title="Edit">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="edit">
+
+                    </div>
+                </td>
+                <td>
+                    @item.DateOfCreation
+                </td>
+                <td>
+                    <a onclick="Delete('/Admin/ManagerCategory/DeleteCategory/{@item.Id}')"
+                       class="btn btn-danger mx-2"> <i class="bi bi-trash-fill"></i> Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<!-- Modal form using beginForm for validation and contact with api good for using modalstate for validation -->
+<form asp-action="Create" asp-controller="ManagerCategory" method="POST" data-ajax="true" data-ajax-update="divCategory" data-ajax-success="OnSuccess">
+    <div id="AddCategoryModal" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content text-bg-dark">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add new category</h5>
+                    <button type="button" class="close border-0" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="divCategory">
+                    <partial name="_CreatePartial" model="new Category()" />
+                </div>
+                <div class="modal-footer">
+                    <input id="btnSubmit" type="submit" value="Submit" class="btn btn-primary" />
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+@section Scripts {<!--Validation scripts will trigger so in some cases there wont be need for any asking the server :)-->
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+}
+
+<partial name="_ToastrNotification" />
+
+
+<script>
+    //Using OnSuccess beacuse of beginform and gettting a message from server i could use on succes or on completed, basicly the same so used onsuccess.
+    function OnSuccess(data) {
+        if (!data.success) {
+            const errorlist = document.getElementById("divCategory").querySelector('ul');
+            errorlist.innerHTML = ""; //Clearing error list first
+            for (var i = 0, l = data.modelError.length; i < l; i++) {
+                var obj = data.modelError[i];
+                var entry = document.createElement('li'); //Add list message
+                entry.appendChild(document.createTextNode(obj.errorMessage));
+                errorlist.appendChild(entry);
+            }
+        }
+        else {
+            $("#exampleModal").modal("hide");
+            window.location.reload(); //realodes the pages beacuse its easiest to call index again and update the table :)
+        }
+    }
+    //Function delete using Ajax just beacuse i wanted to try Type Delete then i reload page beacuse if there would be an error it mostlikley is beacuse it got the deleted by someone else before you refreshed the page.
+    //This function could be skiped and use httpPost or get then redirect to index page by controller instead of window reload.
+    function Delete(url) {
+        $.ajax({
+            url: url,
+            type: 'DELETE',
+            success: function () {
+                window.location.reload();
+            }
+        });
+
+    }
+
+    function Edit(node, Id) {
+        console.log($(node).closest('.row'));
+        $.ajax({
+            type: 'GET',
+            url: '/Admin/ManagerCategory/Edit/',
+            data: 'Id=' + Id,
+            success: function (data) {
+                $(node).closest('.row').hide(); 
+                $(node).closest('td').find('.edit').html(data);
+            }
+        });
+    }
+</script>

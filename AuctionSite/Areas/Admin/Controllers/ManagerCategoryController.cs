@@ -27,7 +27,7 @@ namespace AuctionSite.Areas.Admin.Controllers
 
         // GET: ManagerCategoryController/Edit/5
         public async Task<IActionResult> Edit(Guid Id)
-        {       
+        {
             var category = await _db.Categories.FindAsync(Id);
             if (category == null)
             {
@@ -36,9 +36,6 @@ namespace AuctionSite.Areas.Admin.Controllers
 
             return PartialView(category);
         }
-
-        // POST: ManagerCategoryController/Edit/5
-   
 
         #region API CALLS
         /// <summary>

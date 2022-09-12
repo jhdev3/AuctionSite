@@ -43,14 +43,11 @@ namespace AuctionSite.Areas.AuctionUser.Controllers
                 })
             };
 
-            if (Id == null)
+            if (Id == null)//Create View :)
             {
                 return View(AuctionItemVM);
             }
-            else
-            {
-
-            }
+            //Edit View
             AuctionItemVM.AuctionItem = await _db.AuctionItems.FindAsync(Id);
             if (AuctionItemVM.AuctionItem == null)
             {
@@ -99,13 +96,26 @@ namespace AuctionSite.Areas.AuctionUser.Controllers
                 }
                 else
                 {
-                    //This needs to be changed :)
+                    //This needs to be changed :) To make image working well
                     _db.AuctionItems.Update(obj.AuctionItem);
                 }
+                try
+                {
+                    await _db.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException ex)
+                {
+                    //Using TempData to display error message that it was unsuccesfull save to database. Ex message should be logged if and when logger gets implemented 
+                    TempData["Error"] = $"Failed to save : {obj.AuctionItem.Title}"; //ex.Message for whole error message or Implement an logger and store it there :)
+                    return RedirectToAction("Index");
+                }
+                TempData["Success"] = $"Edit Success :)";
+
                 await _db.SaveChangesAsync();
-                TempData["success"] = "Product created successfully";
+                TempData["success"] = $"{obj.AuctionItem.Title} saved succsefully!";
                 return RedirectToAction("Index");
             }
+            //Not valid modelstate return.
             return View(obj);
 
         }

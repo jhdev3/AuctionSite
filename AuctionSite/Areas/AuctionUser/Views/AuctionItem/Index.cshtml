@@ -45,7 +45,7 @@
                     @Html.DisplayFor(modelItem => item.DateOfCreation)
                 </td>
                 <td>
-                    <a asp-action="CreateEdit" asp-route-id="@item.Id"><i class="bi bi-pencil"></i>  Edit</a> |
+                    <a asp-action="CreateEdit" asp-route-id="@item.Id" class="btn btn-warning mx-2"><i class="bi bi-pencil"></i>  Edit</a> |
                     <a onclick="Delete('/AuctionUser/AuctionItem/Delete/{@item.Id}')"
                        class="btn btn-danger mx-2"> <i class="bi bi-trash-fill"></i> Delete</a>
                 </td>

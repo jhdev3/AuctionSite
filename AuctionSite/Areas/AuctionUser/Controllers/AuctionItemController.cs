@@ -73,7 +73,7 @@ namespace AuctionSite.Areas.AuctionUser.Controllers
                     var uploads = Path.Combine(wwwRootPath, @"images\auctionItems");
                     var extension = Path.GetExtension(file.FileName);
 
-                    if (obj.AuctionItem.ImageUrl != null)
+                    if (obj.AuctionItem.ImageUrl != null)//For Updating the image removing old one!
                     {
                         var oldImagePath = Path.Combine(wwwRootPath, obj.AuctionItem.ImageUrl.TrimStart('\\'));
                         if (System.IO.File.Exists(oldImagePath))
@@ -95,8 +95,7 @@ namespace AuctionSite.Areas.AuctionUser.Controllers
 
                 }
                 else
-                {
-                    //This needs to be changed :) To make image working well
+                {                    
                     _db.AuctionItems.Update(obj.AuctionItem);
                 }
                 try

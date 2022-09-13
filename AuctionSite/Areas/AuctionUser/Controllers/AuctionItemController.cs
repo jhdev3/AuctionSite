@@ -118,5 +118,26 @@ namespace AuctionSite.Areas.AuctionUser.Controllers
             return View(obj);
 
         }
+
+        #region API
+        //using tempdata and toaster to notify Error or Succses instead of JSON return. want to take advantage of the MVC stuff that can be used:)
+        [HttpDelete]
+        public async Task<IActionResult> Delete(Guid? Id)
+        {
+            //Check if the category exists in database
+            var test = await _db.AuctionItems.FindAsync(Id);
+            if (test == null) //If it not exists
+            {
+                TempData["Error"] = "Item already been deleted!";
+                return Ok();
+            }
+
+            _db.AuctionItems.Remove(test);
+            await _db.SaveChangesAsync();
+            TempData["Success"] = $"{test.Title} : Deleted Successfully:)";
+            return Ok();
+        }
+
+        #endregion
     }
 }

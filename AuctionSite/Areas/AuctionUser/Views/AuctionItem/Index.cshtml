@@ -1,0 +1,55 @@
+﻿@model IEnumerable<AuctionSite.Models.AuctionItem>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Auction Item Manager </h1>
+<partial name="_ToastrNotification" /> <!--Toaster partial view so Tempdata Succsess errors shows :)-->
+
+<p>
+    <a asp-action="CreateEdit">Create New Auction Item</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BidPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Category)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateOfCreation)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BidPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category.CategoryName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateOfCreation)
+                </td>
+                <td>
+                    <a asp-action="CreateEdit" asp-route-id="@item.Id" class="btn btn-warning mx-2"><i class="bi bi-pencil"></i>  Edit</a> |
+                    <a onclick="Delete('/AuctionUser/AuctionItem/Delete/{@item.Id}')"
+                       class="btn btn-danger mx-2"> <i class="bi bi-trash-fill"></i> Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

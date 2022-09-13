@@ -27,7 +27,7 @@ namespace AuctionSite.Areas.Admin.Controllers
 
         // GET: ManagerCategoryController/Edit/5
         public async Task<IActionResult> Edit(Guid Id)
-        {       
+        {
             var category = await _db.Categories.FindAsync(Id);
             if (category == null)
             {
@@ -36,9 +36,6 @@ namespace AuctionSite.Areas.Admin.Controllers
 
             return PartialView(category);
         }
-
-        // POST: ManagerCategoryController/Edit/5
-   
 
         #region API CALLS
         /// <summary>
@@ -84,16 +81,16 @@ namespace AuctionSite.Areas.Admin.Controllers
         public async Task<IActionResult> DeleteCategory(Guid?  Id)
         {                    
                 //Check if the category exists in database
-                var test = await _db.Categories.FindAsync(Id);
+            var test = await _db.Categories.FindAsync(Id);
             if (test == null) //If it not exists
             {
-                TempData["Error"] = $"Error while trying to delete: {test.CategoryName}";
+                TempData["Error"] = $"Category already been deleted!";
                 return Ok();
             }
 
             _db.Categories.Remove(test);
             await _db.SaveChangesAsync();
-            TempData["Success"] = $"Lyckades Ta bort : {test.CategoryName} : Deleted Successfully:)";
+            TempData["Success"] = $"Successfully removed : {test.CategoryName} !";
             return Ok();       
         }
 

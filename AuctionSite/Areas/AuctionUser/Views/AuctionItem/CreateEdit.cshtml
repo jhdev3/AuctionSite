@@ -1,0 +1,75 @@
+﻿@model AuctionSite.Models.ViewModels.AuctionItemVM
+
+
+<form method="post" asp-action="CreateEdit" enctype="multipart/form-data">
+    <input asp-for="AuctionItem.Id" hidden /><!--Used for Update -->
+    <input asp-for="AuctionItem.ImageUrl" hidden /> 
+
+    <div class="row">
+        <div class="col-10">
+            <div class="border p-3 mt-4 row">
+                <div class="col-12 pb-2">
+                    <h2 class="text-primary">@(Model.AuctionItem.Id!= Guid.Empty ? "Update": "Create")  Product</h2>
+                    <hr />
+                </div>
+                <div asp-validation-summary="All"></div>
+                <div class="mb-3">
+                    <label asp-for="AuctionItem.Title"></label>
+                    <input asp-for="AuctionItem.Title" class="form-control" />
+                    <span asp-validation-for="AuctionItem.Title" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="AuctionItem.Description"></label>
+                    <textarea asp-for="AuctionItem.Description" rows="3" class="form-control"></textarea>
+                    <span asp-validation-for="AuctionItem.Description" class="text-danger"></span>
+                </div>
+
+
+                <div class="mb-3 col-6">
+                    <label asp-for="AuctionItem.BidPrice"></label>
+                    <input asp-for="AuctionItem.BidPrice" class="form-control" />
+                    <span asp-validation-for="AuctionItem.BidPrice" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="AuctionItem.ImageUrl"></label>
+                    <input type="file" id="uploadBox" name="file" class="form-control" />
+                </div>
+
+                <div class="mb-3 col-6">
+                    <label asp-for="AuctionItem.CategoryId"></label>
+                    <select asp-for="AuctionItem.CategoryId" asp-items="@Model.CategoryList" class="form-select">
+                        <option disabled selected>--Select Category--</option>
+                    </select>
+                    <span asp-validation-for="AuctionItem.CategoryId" class="text-danger"></span>
+                </div>
+
+
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary" style="width:150px">Save</button>
+                    <a asp-controller="AuctionItem" asp-action="Index" class="btn btn-secondary" style="width:150px">
+                        Back to List
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-2 pt-4">
+            <img src="@Model.AuctionItem.ImageUrl"
+                 width="100%" style="border-radius:5px; border:1px solid #bbb9b9" />
+        </div>
+    </div>
+
+
+
+
+
+
+
+</form>
+
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

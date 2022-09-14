@@ -1,5 +1,11 @@
 ﻿@charset "UTF-8";
 /* make changes to the !default Bootstrap variables */
+/*$input-focus-bg: $body-bg;
+$input-focus-color: $body-color;
+
+
+$input-placeholder-color: $body-color;
+$input-plaintext-color: $body-color;*/
 /*!
  * Bootstrap  v5.2.0 (https://getbootstrap.com/)
  * Copyright 2011-2022 The Bootstrap Authors

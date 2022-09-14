@@ -11,11 +11,11 @@ namespace AuctionSite.Models
 
         public string? Description { get; set; }
 
-        [RegularExpression(@"^\d+\.\d{0,2}$", ErrorMessage = "{0} need to be postive with max 2 decimals")]
-        [Range(0, Int32.MaxValue)]
-        public decimal BidPrice { get; set; } = 0; //Sets to 0 if no other value is added  
+        [Display(Name = "Starting bid  $")]
+        [Range(0, Int32.MaxValue, ErrorMessage = "{0} Can not be a negative value!")]
+        public decimal StartingBid { get; set; } = 0; //Sets to 0 if no other value is added  
 
-        [ValidateNever]//Dont wont to validate beacuse in edit etc this field should be null etc
+        [ValidateNever]//Dont wont to validate beacuse in edit etc this field could be null and will be changed when file is added.
         public string? ImageUrl { get; set; }
 
         [Required]

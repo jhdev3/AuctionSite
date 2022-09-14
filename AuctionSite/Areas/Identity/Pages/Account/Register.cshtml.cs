@@ -10,12 +10,14 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
+using AuctionSite.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 
@@ -29,13 +31,16 @@ namespace AuctionSite.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly RoleManager<IdentityRole> _roleManager;
+
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
             IUserStore<IdentityUser> userStore,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender, 
+            RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -43,6 +48,7 @@ namespace AuctionSite.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _roleManager = roleManager;
         }
 
         /// <summary>
@@ -101,6 +107,13 @@ namespace AuctionSite.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
+
+            //Adding User Roles to register for Demo site and allowing anyone to try site, 
+            //Normal implemnation here would be Admin Asign Admin roles or other roles for CMS operations
+            //Normal user should be asigned the role Role_AuctionUser ;)
+            public string? Role { get; set; }
+            public IEnumerable<SelectListItem> RoleList { get; set; }
         }
 
 
@@ -108,6 +121,16 @@ namespace AuctionSite.Areas.Identity.Pages.Account
         {
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            //populating Role List
+            var roleNames = _roleManager.Roles.Select(x => x.Name).ToList();
+            Input = new InputModel()
+            {
+                RoleList = roleNames.Select(name => new SelectListItem
+                {
+                    Text = name,
+                    Value = name
+                })
+            };
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
@@ -126,13 +149,23 @@ namespace AuctionSite.Areas.Identity.Pages.Account
                 }
                 var user = CreateUser();
 
-                    await _userStore.SetUserNameAsync(user, Input.UserName, CancellationToken.None);
-                    await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
-                    var result = await _userManager.CreateAsync(user, Input.Password);
+               await _userStore.SetUserNameAsync(user, Input.UserName, CancellationToken.None);
+               await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+               var result = await _userManager.CreateAsync(user, Input.Password);
                
 
                 if (result.Succeeded)
                 {
+                    //Assignar Role 
+                    if (Input.Role == null)//If its empty will set to normal Auction user 
+                    {
+                        await _userManager.AddToRoleAsync(user, UR.Role_AuctionUser);
+                    }
+                    else
+                    {
+                        await _userManager.AddToRoleAsync(user, Input.Role);
+
+                    }
                     _logger.LogInformation("User created a new account with password.");
 
                     var userId = await _userManager.GetUserIdAsync(user);

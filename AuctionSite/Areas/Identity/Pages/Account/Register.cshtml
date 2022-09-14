@@ -32,6 +32,12 @@
                 <label asp-for="Input.ConfirmPassword"></label>
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
+            <!--For Demo purpose allowing the user to check out the page in the development stage :)-->
+            <div class="form-floating py-2">
+                <select asp-for="Input.Role" asp-items="@Model.Input.RoleList" class="form-select">
+                    <option disabled selected>-Choose role-</option>
+                </select>
+            </div>
             <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
         </form>
     </div>

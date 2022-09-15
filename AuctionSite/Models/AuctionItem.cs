@@ -25,6 +25,10 @@ namespace AuctionSite.Models
         [ValidateNever]//Database fetch not userInput
         public Category Category { get; set; }
 
+            
+        public IList<Bid> bids { get; set; }    
+        //Add User that created The item :) Need to add that
+
         //Later Fix to Set Creator on the AuctionItem i.e Who is auction this away;)
 
     }   

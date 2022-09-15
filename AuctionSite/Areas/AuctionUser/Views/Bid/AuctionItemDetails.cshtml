@@ -1,0 +1,36 @@
+﻿@model AuctionSite.Models.AuctionItem
+
+
+<div class="row">
+    <div class="col-12 col-md-6">
+
+        <img class="img-thumbnail" src="~/images/auctionItems/42340788-3dd1-41ba-b80b-71397465f15e.jpg" />
+    </div>
+    <div class="col-12 col-md-6">
+        <!--Title-->
+        <h5>Title</h5>
+        <p>Leading bid : add bid stuff :)</p>
+        <p>Bids</p>
+
+        <form method="post" asp-action="">
+            <label asp-for="StartingBid"></label>
+            <input asp-for="StartingBid" class="form-control" />
+            <span asp-validation-for="StartingBid" class="text-danger"></span>
+            <button type="submit" class="btn btn-primary" style="width:150px">Save</button>
+        </form>
+
+        <p>
+            Discription
+
+        </p>
+
+        <p> Seller info</p>
+    </div>
+</div>
+
+
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

@@ -50,8 +50,56 @@ a {
     white-space: nowrap;
     line-height: 60px;
 }
+    
 .card:hover{
     -webkit-transform: scale(1.07);
     transform: scale(1.03);
     box-shadow: 0px 10px 25px rgba(0,0,0.08);
+}
+
+
+
+/*Side Scroller*/
+.side-scroller_row {
+    --_spacer: 1rem; /* Custom varibale to change the space, change here to get good proportions :)*/
+    display: grid;
+    gap: var(--spacer);
+    grid-auto-flow: column;
+    grid-auto-columns: 29%; /* Width :) Nice to not be even makes user experiense better will show there is smth else to scroll to */
+
+    padding: 0 var(--_spacer) var(--_spacer);
+    overflow-x: auto; /*  making scroll behviour x left and right instead of up and down  :) */
+    overscroll-behavior-inline: contain;
+}
+
+.elements {
+    display: grid;
+    grid-template-rows: min-content;
+    padding: var(--_spacer);
+    gap: var(--_spacer);
+    border-radius: 5px;
+    box-shadow: inherit;
+    padding: var(--_spacer);
+    background: black;
+    border-radius: 10px;
+}
+
+    .elements > img {
+        inline-size: 100%;
+        aspect-ratio: 16 / 9;
+        object-fit: cover;
+    }
+
+.snaps-inline {
+    scroll-snap-type: inline mandatory;
+    scroll-padding-inline: var(--_spacer, 1rem);
+}
+
+    .snaps-inline * {
+        scroll-snap-align: start;
+    }
+
+.img-extra {
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
 }

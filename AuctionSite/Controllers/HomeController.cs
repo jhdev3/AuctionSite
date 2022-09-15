@@ -1,5 +1,7 @@
-﻿using AuctionSite.Models;
+﻿using AuctionSite.Data;
+using AuctionSite.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace AuctionSite.Controllers
@@ -7,15 +9,19 @@ namespace AuctionSite.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly ApplicationDbContext _db;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext dbcontext)
         {
             _logger = logger;
+            _db = dbcontext;    
         }
 
+        
         public IActionResult Index()
         {
-            return View();
+            IEnumerable<AuctionItem> items = _db.AuctionItems.Include(b => b.bids.OrderByDescending(x => x.BidPrice)).ToList();
+            return View(items);
         }
 
         public IActionResult Privacy()

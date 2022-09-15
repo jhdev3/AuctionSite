@@ -22,7 +22,12 @@ namespace AuctionSite.Areas.AuctionUser.Controllers
         {
             //Could use Explicit loading first getting Acution Item then Getting all the bids 2 round trip to DB here i rather add a list in my AuctionItems.:)
             //for simplicity i use Eager loading beacuse I dont have that many tables and includes this makes it simpler :)
-            var item = _db.AuctionItems.Where(a => a.Id == id).Include(b => b.bids).FirstOrDefault();
+            if(id == null)  
+                return BadRequest();
+
+            var item = _db.AuctionItems.Where(a => a.Id == id).Include(b => b.bids.OrderByDescending(x=>x.BidPrice)).FirstOrDefault();
+            if(item == null)
+                return NotFound();  
 
 
             return View(item);

@@ -1,9 +1,27 @@
-﻿@{
+﻿@model IEnumerable<AuctionItem>
+
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">AuctionSite Website</h1>
 </div>
-    <partial name="_CreateCategoryy" />
+
+
+
+<div class="side-scroller_row snaps-inline">
+    @foreach (var item in Model)
+    {
+        <a asp-area="AuctionUser" asp-controller="Bid" asp-action="AuctionItemDetails" asp-route-id="@item.Id">
+            <div class="elements">
+                <img src="@item.ImageUrl" alt="@item.Title picture" />
+                <h5 class="card-title">@item.Title</h5>
+
+            </div>
+        </a>
+    }
+</div>
+
+

@@ -18,7 +18,7 @@
             <div class="elements">
                 <img src="@item.ImageUrl" alt="@item.Title picture" />
                 <h5 class="card-title">@item.Title</h5>
-
+                <p>$@(item.bids.Count() > 0 ? item.bids.First() : item.StartingBid ) </p>
             </div>
         </a>
     }

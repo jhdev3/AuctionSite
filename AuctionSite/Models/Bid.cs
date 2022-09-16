@@ -9,7 +9,7 @@ namespace AuctionSite.Models
     {
         [Required(ErrorMessage = "Empty bid is no bid ;)!!")]
         [Range(0, Int32.MaxValue, ErrorMessage = "{0} Can not be a negative value!")]
-        public decimal BidPrice { get; set; }//Decimal beacuse its money :)    
+        public int BidPrice { get; set; }//Decimal beacuse its money :)    
 
 
         public Guid AuctionItemId { get; set; }

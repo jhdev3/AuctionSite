@@ -15,10 +15,10 @@
     @foreach (var item in Model)
     {
         <a asp-area="AuctionUser" asp-controller="Bid" asp-action="AuctionItemDetails" asp-route-id="@item.Id">
-            <div class="elements">
+            <div class="elements bg-dark">
                 <img src="@item.ImageUrl" alt="@item.Title picture" />
                 <h5 class="card-title">@item.Title</h5>
-                <p>$@(item.bids.Count() > 0 ? item.bids.First() : item.StartingBid ) </p>
+                <p>$@(item.bids.Count() > 0 ? item.bids.First().BidPrice : item.StartingBid ) </p>
             </div>
         </a>
     }

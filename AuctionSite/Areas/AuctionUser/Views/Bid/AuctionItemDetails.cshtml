@@ -1,30 +1,56 @@
-﻿@model AuctionSite.Models.AuctionItem
+﻿@model AuctionSite.Models.ViewModels.AuctionItemBidVM
 
 
 <div class="row">
     <div class="col-12 col-md-6">
 
-        <img class="img-thumbnail img-extra" src="~/images/auctionItems/42340788-3dd1-41ba-b80b-71397465f15e.jpg" />
+        <img class="img-thumbnail" src="@Model.auctionItem.ImageUrl" />
     </div>
-    <div class="col-12 col-md-6">
+    <div class="col-8 col-md-5">
         <!--Title-->
-        <h5>Title</h5>
-        <p>Leading bid : add bid stuff :)</p>
-        <p>Bids</p>
+        <h2>@Model.auctionItem.Title</h2>
+        <div class="row justify-content-between align-items-end">
+            <div class="col">
+                <p class="mb-0">Leading bid</p>
+            </div>
+            <div class="col">
+                <h3 class="mb-0" id="leadingBid">$@(Model.auctionItem.bids.Count() > 0 ? Model.auctionItem.bids.First().BidPrice : Model.auctionItem.StartingBid)</h3>
+            </div>
+        </div>
 
-        <form method="post" asp-action="">
-            <label asp-for="StartingBid"></label>
-            <input asp-for="StartingBid" class="form-control" />
-            <span asp-validation-for="StartingBid" class="text-danger"></span>
-            <button type="submit" class="btn btn-primary" style="width:150px">Save</button>
+        <div class="row justify-content-between align-items-end mt-3">
+            <div class="col">
+                <p class="mb-0">Number of Bidders</p>
+            </div>
+            <div class="col">
+                <p class="font-weight-bold mb-0">@Model.auctionItem.bids.Count() bids</p>
+            </div>
+        </div>
+
+
+        <form method="post" asp-action="PlaceAbid" data-ajax="true" data-ajax-success="OnSuccess">
+            <input asp-for="auctionItem.Id" hidden /><!--Used for Update -->
+            <div asp-validation-summary="All" class="text-danger" id="validationSummary"></div>
+            <p class="text-center mb-1">
+                Place bid higher then: <span id="higherThen"></span> $@(Model.auctionItem.bids.Count() > 0 ? Model.auctionItem.bids.First().BidPrice : Model.auctionItem.StartingBid)
+            </p>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text bg-dark">$</span>
+                </div>
+                <input asp-for="placeBid" class="form-control" aria-label="Amount $"/>
+            </div>
+            <span asp-validation-for="placeBid" class="text-danger"></span>
+            <button type="submit" class="btn btn-primary" style="width:150px"><i class="far fa-money-bill-alt"></i> Place bid</button>
         </form>
 
-        <p>
-            Discription
-
-        </p>
-
-        <p> Seller info</p>
+        <div class="row mt-3 border border-light rounded">
+            <p>
+                @Model.auctionItem.Description
+            </p>
+        </div>
+      
+        <p> Seller info</p><!--Add Creater of Auction Item-->
     </div>
 </div>
 
@@ -34,3 +60,25 @@
         <partial name="_ValidationScriptsPartial" />
     }
 }
+
+
+<script>
+    function OnSuccess(data) {
+        if (!data.success) {
+            const errorlist = document.getElementById("validationSummary").querySelector('ul');
+            errorlist.innerHTML = ""; //Clearing error list first
+            for (var i = 0, l = data.modelError.length; i < l; i++) {
+                var obj = data.modelError[i];
+                var entry = document.createElement('li'); //Add list message
+                entry.appendChild(document.createTextNode(obj.errorMessage));
+                errorlist.appendChild(entry);
+            }
+        }
+        else {
+            document.getElementById("leadingBid").innerText = data.amount;
+            document.getElementById("higherThen").innerText = data.amount;
+            toastr.success("You have the highest bid! "); //not realoding the page for the one that got the highest bid just changing some values and giving an alert :).
+        }
+    }
+
+</script>

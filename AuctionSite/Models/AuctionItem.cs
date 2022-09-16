@@ -13,7 +13,7 @@ namespace AuctionSite.Models
 
         [Display(Name = "Starting bid  $")]
         [Range(0, Int32.MaxValue, ErrorMessage = "{0} Can not be a negative value!")]
-        public decimal StartingBid { get; set; } = 0; //Sets to 0 if no other value is added  
+        public int StartingBid { get; set; } = 0; //Sets to 0 if no other value is added  
 
         [ValidateNever]//Dont wont to validate beacuse in edit etc this field could be null and will be changed when file is added.
         public string? ImageUrl { get; set; }

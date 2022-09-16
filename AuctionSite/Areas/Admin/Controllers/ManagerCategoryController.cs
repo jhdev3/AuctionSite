@@ -95,6 +95,7 @@ namespace AuctionSite.Areas.Admin.Controllers
         }
 
 
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(Category category)

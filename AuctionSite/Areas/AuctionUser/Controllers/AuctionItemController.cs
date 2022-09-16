@@ -33,7 +33,7 @@ namespace AuctionSite.Areas.AuctionUser.Controllers
         public async Task<IActionResult> CreateEdit(Guid? Id)
         {
             var categories = await _db.Categories.ToListAsync();
-            AuctionItemVM AuctionItemVM = new()
+            AuctionItemCreateEditVM AuctionItemVM = new()
             {
                 AuctionItem = new(),
                 CategoryList = categories.Select(i => new SelectListItem //Populate SelectList
@@ -62,7 +62,7 @@ namespace AuctionSite.Areas.AuctionUser.Controllers
         //POST
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateEdit(AuctionItemVM obj, IFormFile? file)
+        public async Task<IActionResult> CreateEdit(AuctionItemCreateEditVM obj, IFormFile? file)
         {
             if (ModelState.IsValid)
             {

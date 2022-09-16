@@ -1,8 +1,10 @@
 ﻿using AuctionSite.Data;
 using AuctionSite.Models;
 using AuctionSite.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace AuctionSite.Areas.AuctionUser.Controllers
 {
@@ -18,19 +20,81 @@ namespace AuctionSite.Areas.AuctionUser.Controllers
             _db = dbcontext;
 
         }
-        public IActionResult AuctionItemDetails(Guid? id)
+        public async Task<IActionResult> AuctionItemDetailsAsync(Guid? id)
         {
             //Could use Explicit loading first getting Acution Item then Getting all the bids 2 round trip to DB here i rather add a list in my AuctionItems.:)
             //for simplicity i use Eager loading beacuse I dont have that many tables and includes this makes it simpler :)
             if(id == null)  
                 return BadRequest();
 
-            var item = _db.AuctionItems.Where(a => a.Id == id).Include(b => b.bids.OrderByDescending(x=>x.BidPrice)).FirstOrDefault();
+            var item = await _db.AuctionItems.Where(a => a.Id == id).Include(b => b.bids.OrderByDescending(x=>x.BidPrice)).FirstOrDefaultAsync();
             if(item == null)
-                return NotFound();  
+                return NotFound();
 
 
-            return View(item);
+            AuctionItemBidVM vm = new AuctionItemBidVM{ auctionItem = item};
+            
+            return View(vm);
         }
+
+        #region API
+        // POST: Make a bid
+        [Authorize]//Need to be logged in/have an account to Place a bid.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> PlaceAbid(AuctionItemBidVM bid)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Json(new
+                {
+                    success = false,
+                    ModelError = ModelState.Values.SelectMany(x => x.Errors)
+                });
+            }
+
+            //Getting the user thats placing the bid :)
+            var getIdentity = (ClaimsIdentity)User.Identity;
+            var claim = getIdentity.FindFirst(ClaimTypes.NameIdentifier);
+            if (claim == null)
+            {
+                return NotFound("User don't exists");
+            }
+            //Do some Validation check higestBid
+            var heighestBid = await _db.Bids.Where(x => x.AuctionItemId == bid.auctionItem.Id).MaxAsync(x => (int?)x.BidPrice) ?? bid.auctionItem.StartingBid; //Get the current 
+
+            //EASIER TO CREATE THIS AS an API :)
+            if (bid.placeBid <= heighestBid)
+            {
+                ModelState.AddModelError(string.Empty, $"You need to place a bid heigher than:$ {heighestBid}");
+                return Json(new
+                {
+                    success = false,
+                    ModelError = ModelState.Values.SelectMany(x => x.Errors)
+                });
+
+            }
+            //Save to db 
+            Bid newBid = new Bid{ AuctionItemId = bid.auctionItem.Id, BidPrice = (int)bid.placeBid, UserID = claim.Value};
+            _db.Bids.Add(newBid);
+            try
+            {
+                await _db.SaveChangesAsync();
+            }catch (Exception ex)
+            {
+                //Its not a modelstate error but a good way to not reapet code and give user some feedback
+                ModelState.AddModelError(string.Empty, "Database error, try again later!");
+                return Json(new
+                {
+                    success = false,
+                    ModelError = ModelState.Values.SelectMany(x => x.Errors)
+                });
+            }
+
+            return Json(new { Success = true, amount = bid.placeBid });
+        }
+
+        #endregion
     }
 }
+

@@ -117,6 +117,11 @@ namespace AuctionSite.Areas.Identity.Pages.Account
                 if (email.IsValid(Input.Email))
                 {
                     var user = await _userManager.FindByEmailAsync(Input.Email);
+                    if(user == null)
+                    {
+                        ModelState.AddModelError(string.Empty, $"No user with email: {Input.Email}");
+                        return Page();
+                    }    
                     username = user.UserName;
                 } 
                 else

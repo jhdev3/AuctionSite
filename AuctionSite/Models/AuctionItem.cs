@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -11,10 +12,11 @@ namespace AuctionSite.Models
 
         public string? Description { get; set; }
 
-        [Display(Name = "Starting bid  $")]
+        [Display(Name = "Starting price  $")]
         [Range(0, Int32.MaxValue, ErrorMessage = "{0} Can not be a negative value!")]
         public int StartingBid { get; set; } = 0; //Sets to 0 if no other value is added  
 
+        [Display(Name ="Upload Image")]
         [ValidateNever]//Dont wont to validate beacuse in edit etc this field could be null and will be changed when file is added.
         public string? ImageUrl { get; set; }
 
@@ -25,11 +27,15 @@ namespace AuctionSite.Models
         [ValidateNever]//Database fetch not userInput
         public Category Category { get; set; }
 
-            
-        public IList<Bid> bids { get; set; }    
+        [ValidateNever]
+        public IList<Bid> bids { get; set; }
         //Add User that created The item :) Need to add that
 
-        //Later Fix to Set Creator on the AuctionItem i.e Who is auction this away;)
+        [ValidateNever]
+        public string? UserID { get; set; } //having that as nullable beacuse of Cascading on Delete not removing the Item
+
+        [ValidateNever]//Database fetch not userInput
+        public IdentityUser User { get; set; } //maybe this should be Readonly  or only get doesnt matter i only set from db anyway.
 
     }   
 }

@@ -1,4 +1,6 @@
-﻿@model AuctionSite.Models.ViewModels.AuctionItemBidVM
+﻿@using System.Security.Claims
+@using Microsoft.AspNetCore.Identity
+@model AuctionSite.Models.ViewModels.AuctionItemBidVM
 
 
 <div class="row">
@@ -23,62 +25,106 @@
                 <p class="mb-0">Number of Bidders</p>
             </div>
             <div class="col">
-                <p class="font-weight-bold mb-0">@Model.auctionItem.bids.Count() bids</p>
+                <p class="font-weight-bold mb-0">
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#bidHistoryModal">
+                        ( @Model.auctionItem.bids.Count() )
+                    </button>
+                    bids
+                </p>
             </div>
         </div>
 
 
         <form method="post" asp-action="PlaceAbid" data-ajax="true" data-ajax-success="OnSuccess">
-            <input asp-for="auctionItem.Id" hidden /><!--Used for Update -->
+            <input asp-for="auctionItem.Id" hidden /><!--Used for serverside validation -->
+            <input asp-for="auctionItem.StartingBid" hidden /><!--Used for serverside validation -->
+
             <div asp-validation-summary="All" class="text-danger" id="validationSummary"></div>
-            <p class="text-center mb-1">
-                Place bid higher then: <span id="higherThen"></span> $@(Model.auctionItem.bids.Count() > 0 ? Model.auctionItem.bids.First().BidPrice : Model.auctionItem.StartingBid)
-            </p>
+       
+                @if (ViewData["HighestBid"] != null)
+                {
+                    <p class="text-center mb-1 text-success">
+                        U got the highest bid!!
+                    </p>
+                }
+                else
+                {
+                    <p class="text-center mb-1">
+                        Place bid higher then: <span id="higherThen"></span> $@(Model.auctionItem.bids.Count() > 0 ? Model.auctionItem.bids.First().BidPrice : Model.auctionItem.StartingBid)
+                    </p>
+                }            
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text bg-dark">$</span>
                 </div>
-                <input asp-for="placeBid" class="form-control" aria-label="Amount $"/>
+                <input asp-for="placeBid" class="form-control" aria-label="Amount $" />
             </div>
             <span asp-validation-for="placeBid" class="text-danger"></span>
             <button type="submit" class="btn btn-primary" style="width:150px"><i class="far fa-money-bill-alt"></i> Place bid</button>
         </form>
 
-        <div class="row mt-3 border border-light rounded">
+        <div class="row mt-3 border border-secondary rounded">
             <p>
                 @Model.auctionItem.Description
             </p>
         </div>
-      
-        <p> Seller info</p><!--Add Creater of Auction Item-->
+
+        <p>
+            Seller:  <a asp-area="AuctionUser" asp-controller="AuctionItemController" asp-action="User_list" asp-route-id="@Model.auctionItem.Id"> @Model.auctionItem.User.UserName </a><!--Add Creater of Auction Item-->
+        </p>
     </div>
 </div>
 
 
-@section Scripts{
-    @{
-        <partial name="_ValidationScriptsPartial" />
+<!-- Button trigger modal -->
+<!-- Modal -->
+<div class="modal fade" id="bidHistoryModal" tabindex="-1" aria-labelledby="bidHistoryModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <partial name="_bidHistory" model="@Model.auctionItem.bids" /> <!--Loading the Cards :)-->
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+    @section Scripts{
+        @{
+            <partial name="_ValidationScriptsPartial" />
+        }
     }
-}
 
 
-<script>
-    function OnSuccess(data) {
-        if (!data.success) {
-            const errorlist = document.getElementById("validationSummary").querySelector('ul');
-            errorlist.innerHTML = ""; //Clearing error list first
-            for (var i = 0, l = data.modelError.length; i < l; i++) {
-                var obj = data.modelError[i];
-                var entry = document.createElement('li'); //Add list message
-                entry.appendChild(document.createTextNode(obj.errorMessage));
-                errorlist.appendChild(entry);
+    <script>
+        function OnSuccess(data) {
+            if (!data.success) {//An good improvment here is also update the page with the current highest bid so the user dont need to refresh it's page.
+                //or i could us tempdata and toaster to refresh page and show error message there.
+                const errorlist = document.getElementById("validationSummary").querySelector('ul');
+                errorlist.innerHTML = ""; //Clearing error list first
+                for (var i = 0, l = data.modelError.length; i < l; i++) {
+                    var obj = data.modelError[i];
+                    var entry = document.createElement('li'); //Add list message
+                    entry.appendChild(document.createTextNode(obj.errorMessage));
+                    errorlist.appendChild(entry);
+                }
+            }
+            else {
+                window.location.reload(); //Reloading the page to update the fields :)
+                // toastr.success("You have the highest bid! "); //not realoding the page for the one that got the highest bid just changing some values and giving an alert :).
             }
         }
-        else {
-            document.getElementById("leadingBid").innerText = data.amount;
-            document.getElementById("higherThen").innerText = data.amount;
-            toastr.success("You have the highest bid! "); //not realoding the page for the one that got the highest bid just changing some values and giving an alert :).
-        }
-    }
 
-</script>
+    </script>

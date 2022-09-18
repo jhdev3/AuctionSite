@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-
+using Microsoft.AspNetCore.Identity;
 namespace AuctionSite.Areas.AuctionUser.Controllers
 {
     [Area("AuctionUser")]
@@ -27,11 +27,23 @@ namespace AuctionSite.Areas.AuctionUser.Controllers
             if(id == null)  
                 return BadRequest();
 
-            var item = await _db.AuctionItems.Where(a => a.Id == id).Include(b => b.bids.OrderByDescending(x=>x.BidPrice)).FirstOrDefaultAsync();
-            if(item == null)
+            var item = await _db.AuctionItems.Where(a => a.Id == id).Include(u => u.User)
+                                              .Include(b => b.bids.OrderByDescending(x => x.BidPrice))
+                                              .ThenInclude(x => x.User)
+                                              .FirstOrDefaultAsync();
+
+          
+            if (item == null)
                 return NotFound();
 
-
+            var getIdentity = (ClaimsIdentity)User.Identity;//Used as Notification if u got highest bid instead of validating that
+            var claim = getIdentity.FindFirst(ClaimTypes.NameIdentifier);
+            string highestBidder = item.bids.Count() > 0 ? item.bids.First().UserID : "NoBidders";
+            if (claim != null && claim.Value == highestBidder)
+            {
+                ViewData["HighestBid"] = "true";
+            }
+          
             AuctionItemBidVM vm = new AuctionItemBidVM{ auctionItem = item};
             
             return View(vm);
@@ -63,7 +75,7 @@ namespace AuctionSite.Areas.AuctionUser.Controllers
             //Do some Validation check higestBid
             var heighestBid = await _db.Bids.Where(x => x.AuctionItemId == bid.auctionItem.Id).MaxAsync(x => (int?)x.BidPrice) ?? bid.auctionItem.StartingBid; //Get the current 
 
-            //EASIER TO CREATE THIS AS an API :)
+            //H :)
             if (bid.placeBid <= heighestBid)
             {
                 ModelState.AddModelError(string.Empty, $"You need to place a bid heigher than:$ {heighestBid}");
@@ -90,8 +102,8 @@ namespace AuctionSite.Areas.AuctionUser.Controllers
                     ModelError = ModelState.Values.SelectMany(x => x.Errors)
                 });
             }
-
-            return Json(new { Success = true, amount = bid.placeBid });
+            TempData["success"] = $"You got the highest bid right now!!";
+            return Json(new { Success = true});
         }
 
         #endregion

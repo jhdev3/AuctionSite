@@ -13,5 +13,8 @@ namespace AuctionSite.Data
         public DbSet<Category> Categories { get; set; }
 
         public DbSet<AuctionItem> AuctionItems { get; set; }
+
+        public DbSet<Bid> Bids { get; set; }
+
     }
 }

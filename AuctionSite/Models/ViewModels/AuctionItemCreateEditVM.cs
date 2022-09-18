@@ -6,7 +6,7 @@ namespace AuctionSite.Models.ViewModels
     /// <summary>
     /// Class used as a View Model to Create a dropdown list and not useing viewbags etcs
     /// </summary>
-    public class AuctionItemVM
+    public class AuctionItemCreateEditVM
     {
         public AuctionItem AuctionItem { get; set; }
 

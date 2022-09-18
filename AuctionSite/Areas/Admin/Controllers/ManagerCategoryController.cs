@@ -1,5 +1,6 @@
 ﻿using AuctionSite.Data;
 using AuctionSite.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace AuctionSite.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = UR.Role_Admin)]//Setting all this to Admin Accsess only
     public class ManagerCategoryController : Controller
     {
         private readonly ApplicationDbContext _db;
@@ -93,6 +95,7 @@ namespace AuctionSite.Areas.Admin.Controllers
             TempData["Success"] = $"Successfully removed : {test.CategoryName} !";
             return Ok();       
         }
+
 
 
         [HttpPost]

@@ -27,7 +27,9 @@ $input-focus-color: $body-color;
 $input-placeholder-color: $body-color;
 $input-plaintext-color: $body-color;*/
 
-
+$form-file-button-color: $body-color;
+$form-file-button-bg: #006aba;
+$form-file-button-hover-bg: shade-color($form-file-button-bg, 7%);
 
 
 // Typography

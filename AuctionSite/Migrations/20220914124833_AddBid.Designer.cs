@@ -4,6 +4,7 @@ using AuctionSite.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AuctionSite.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220914124833_AddBid")]
+    partial class AddBid
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,21 +42,16 @@ namespace AuctionSite.Migrations
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("StartingBid")
-                        .HasColumnType("int");
+                    b.Property<decimal>("StartingBid")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserID")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
-
-                    b.HasIndex("UserID");
 
                     b.ToTable("AuctionItems");
                 });
@@ -68,8 +65,8 @@ namespace AuctionSite.Migrations
                     b.Property<Guid>("AuctionItemId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("BidPrice")
-                        .HasColumnType("int");
+                    b.Property<decimal>("BidPrice")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("DateOfCreation")
                         .HasColumnType("datetime2");
@@ -312,19 +309,13 @@ namespace AuctionSite.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserID");
-
                     b.Navigation("Category");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("AuctionSite.Models.Bid", b =>
                 {
                     b.HasOne("AuctionSite.Models.AuctionItem", "AuctionItem")
-                        .WithMany("bids")
+                        .WithMany()
                         .HasForeignKey("AuctionItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -389,11 +380,6 @@ namespace AuctionSite.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("AuctionSite.Models.AuctionItem", b =>
-                {
-                    b.Navigation("bids");
                 });
 #pragma warning restore 612, 618
         }

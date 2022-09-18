@@ -2,6 +2,8 @@ using AuctionSite.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using AuctionSite.Data.DBinit;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using AuctionSite.Models.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +25,9 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
              .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddScoped<IDbInitializer, DbInitializer>();//Scoping interface to proper class
+
+builder.Services.AddSingleton<IEmailSender, EmailSender>(); //Adding EmailSender
+
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 
 

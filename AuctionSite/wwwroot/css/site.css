@@ -1,4 +1,5 @@
 :root {
+  --spacer: 1rem;
 }
 
 html {
@@ -20,13 +21,14 @@ body {
   margin-bottom: 60px;
 }
 
-input { /*This is used for my forms to have autocomplete look a bit better, should be switched if i get it working with sass */
-    color-scheme: dark;
+input {
+  /*This is used for my forms to have autocomplete look a bit better, should be switched if i get it working with sass */
+  color-scheme: dark;
 }
 /*Formcontrolled disabled overide bootstrap want to do this with sass if possible :)*/
 .form-control:disabled {
-    color: black;
-    opacity: 0.4
+  color: black;
+  opacity: 0.4;
 }
 /* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
@@ -40,18 +42,95 @@ a.navbar-brand {
 a {
   color: rgba(255, 255, 255, 0.85);
 }
+
 .nav-link {
-    color: rgba(255, 255, 255, 0.85);
+  color: rgba(255, 255, 255, 0.85);
 }
+
 .footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    white-space: nowrap;
-    line-height: 60px;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  white-space: nowrap;
+  line-height: 60px;
 }
-.card:hover{
-    -webkit-transform: scale(1.07);
-    transform: scale(1.03);
-    box-shadow: 0px 10px 25px rgba(0,0,0.08);
+/*Fun customized scrollbar:)*/
+.side-scroller_row::-webkit-scrollbar {
+  width: 1rem;
+  height: 1rem;
+}
+
+.side-scroller_row::-webkit-scrollbar-track {
+  background: rgb(32, 83, 223);
+  border-radius: 100vw;
+  margin-block: 0.5rem;
+}
+
+.side-scroller_row::-webkit-scrollbar-thumb {
+  background: rgb(50, 3, 161);
+  border: 0.25rem solid rgb(32, 131, 223);
+  border-radius: 100vw;
+}
+
+.side-scroller_row::-webkit-scrollbar-thumb:hover {
+  background: hsl(120 100% 10% / 1);
+}
+
+/*Side Scroller*/
+.side-scroller_row {
+  /* Custom varibale to change the space, change here to get good proportions :)*/
+  display: grid;
+  gap: var(--spacer);
+  grid-auto-flow: column;
+  grid-auto-columns: 29%; /* Width :) Nice to not be even makes user experiense better will show there is smth else to scroll to */
+
+  padding: 0 var(--spacer) var(--spacer);
+  overflow-x: auto; /*  making scroll behviour x left and right instead of up and down  :) */
+  overscroll-behavior-inline: contain;
+
+  scrollbar-color: #d4aa70 #e4e4e4;
+  scrollbar-width: thin;
+}
+
+.side-scroller_row::-webkit-scrollbar-thumb {
+  background-image: linear-gradient(180deg, #d0368a 0%, #708ad4 99%);
+  box-shadow: inset 2px 2px 5px 0 rgba(#fff, 0.5);
+  border-radius: 100px;
+}
+
+.elements {
+  display: grid;
+  grid-template-rows: min-content; /*Smallest element decides the height :)*/
+  padding: var(--spacer);
+  gap: var(--spacer);
+  border-radius: 5px;
+  box-shadow: inherit;
+  border-radius: 10px;
+}
+
+.elements > img {
+  inline-size: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.snaps-inline {
+  scroll-snap-type: inline mandatory;
+  scroll-padding-inline: var(--spacer, 1rem);
+}
+
+.snaps-inline * {
+  scroll-snap-align: start;
+}
+
+.img-extra {
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.card:hover,
+.elements:hover {
+  -webkit-transform: scale(1.07);
+  transform: scale(1.03);
+  box-shadow: 0px 10px 25px rgba(0, 0, 0.08);
 }

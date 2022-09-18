@@ -1,9 +1,28 @@
-﻿@{
+﻿@model IEnumerable<AuctionItem>
+
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">AuctionSite Website</h1>
 </div>
-    <partial name="_CreateCategoryy" />
+
+
+<!--This could be put in a partial view and incase alot of products can load them by category to extend the index page
+    Or if doing some kind of links/dropdowns to view items by category just send this as a partial view ;) I.E render elements -->
+<div class="side-scroller_row snaps-inline">
+    @foreach (var item in Model)
+    {
+        <div class="elements bg-dark">
+
+            <img src="@item.ImageUrl" alt="@item.Title picture" />
+            <a asp-area="AuctionUser" asp-controller="Bid" asp-action="AuctionItemDetails" asp-route-id="@item.Id"> <h5 class="card-title">@item.Title</h5></a>
+            <p>$@(item.bids.Count() > 0 ? item.bids.First().BidPrice : item.StartingBid ) </p>
+        </div>
+
+    }
+</div>
+
+
